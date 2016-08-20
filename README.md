@@ -1,7 +1,9 @@
 ## Keras implementation of class activation mapping
 
 Original paper project page: http://cnnlocalization.csail.mit.edu
+
 Code with Caffe / matcaffe interface: https://github.com/metalbubble/CAM
+
 
 Blog post about this project: http://jacobcv.blogspot.com/2016/08/class-activation-maps-in-keras.html 
 
@@ -10,9 +12,12 @@ Blog post about this project: http://jacobcv.blogspot.com/2016/08/class-activati
 
 
 This project implements class activation maps with Keras.
+
 Class activation maps are a simple technique to get the image regions relevant to a certain class.
 
-This was fined tuned on VGG16 with images from here: http://pascal.inrialpes.fr/data/human
+This was fined tuned on VGG16 with images from here: 
+http://pascal.inrialpes.fr/data/human
+
 The model in model.py is a two category classifier, used to classify person / not a person.
 
     usage: cam.py [-h] [--train TRAIN] [--image_path IMAGE_PATH]
