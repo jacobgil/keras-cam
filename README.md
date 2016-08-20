@@ -1,8 +1,8 @@
 ## Keras implementation of class activation mapping
 
-Original paper project page: http://cnnlocalization.csail.mit.edu
+Paper / project page: http://cnnlocalization.csail.mit.edu
 
-Code with Caffe / matcaffe interface: https://github.com/metalbubble/CAM
+Paper's authors Code with Caffe / matcaffe interface: https://github.com/metalbubble/CAM
 
 
 Blog post about this project: http://jacobcv.blogspot.com/2016/08/class-activation-maps-in-keras.html 
