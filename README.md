@@ -2,10 +2,10 @@
 
 Paper / project page: http://cnnlocalization.csail.mit.edu
 
-Paper's authors Code with Caffe / matcaffe interface: https://github.com/metalbubble/CAM
+Paper authors' code with Caffe / matcaffe interface: https://github.com/metalbubble/CAM
 
 
-Blog post about this project: http://jacobcv.blogspot.com/2016/08/class-activation-maps-in-keras.html 
+Blog post on this repository: http://jacobcv.blogspot.com/2016/08/class-activation-maps-in-keras.html 
 
 
 ![enter image description here](https://raw.githubusercontent.com/jacobgil/keras-cam/master/examples/mona_lisa.jpg)
