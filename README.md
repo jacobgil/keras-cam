@@ -7,6 +7,7 @@ Paper authors' code with Caffe / matcaffe interface: https://github.com/metalbub
 
 Blog post on this repository: http://jacobcv.blogspot.com/2016/08/class-activation-maps-in-keras.html 
 
+Checkpoint with person/not person weights: https://drive.google.com/open?id=0B1l5JSkBbENBdk95ZW1DOUhqQUE
 
 ![enter image description here](https://raw.githubusercontent.com/jacobgil/keras-cam/master/examples/mona_lisa.jpg)
 
@@ -19,6 +20,8 @@ This was fined tuned on VGG16 with images from here:
 http://pascal.inrialpes.fr/data/human
 
 The model in model.py is a two category classifier, used to classify person / not a person.
+
+	python cam.py --model_path cam_checkpoint.hdf5 --image_path=image.jpg
 
     usage: cam.py [-h] [--train TRAIN] [--image_path IMAGE_PATH]
               [--output_path OUTPUT_PATH] [--model_path MODEL_PATH]
