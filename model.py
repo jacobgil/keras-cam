@@ -49,11 +49,10 @@ def VGG16_convolutions():
     model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_3'))
     return model
 
-def get_model(load_weights = True):
+def get_model():
     model = VGG16_convolutions()
 
-    if load_weights:
-        model = load_model_weights(model, "vgg16_weights.h5")
+    model = load_model_weights(model, "vgg16_weights.h5")
     
     model.add(Lambda(global_average_pooling, 
               output_shape=global_average_pooling_shape))

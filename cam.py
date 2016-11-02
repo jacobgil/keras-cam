@@ -7,7 +7,7 @@ import cv2
 import argparse
 
 def train(dataset_path):
-        model = get_model(load_weights = False)
+        model = get_model()
         X, y = load_inria_person(dataset_path)
 	print "Training.."
         checkpoint_path="weights.{epoch:02d}-{val_loss:.2f}.hdf5"
