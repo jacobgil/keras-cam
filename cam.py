@@ -7,8 +7,8 @@ import cv2
 import argparse
 
 def train(dataset_path):
+        model = get_model(load_weights = False)
         X, y = load_inria_person(dataset_path)
-        model = get_model()
 	print "Training.."
         checkpoint_path="weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
@@ -40,7 +40,6 @@ def visualize_class_activation_map(model_path, img_path, output_path):
         heatmap[np.where(cam < 0.2)] = 0
         img = heatmap*0.5 + original_img
         cv2.imwrite(output_path, img)
-        
 
 def get_args():
     parser = argparse.ArgumentParser()
