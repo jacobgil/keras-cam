@@ -1,19 +1,46 @@
 from keras.models import *
 from keras.callbacks import *
+from keras.preprocessing.image import ImageDataGenerator
 import keras.backend as K
 from model import *
 from data import *
+from utils import *
 import cv2
 import argparse
+from keras.utils.np_utils import to_categorical
+BATCH_SIZE = 32
 
 def train(dataset_path):
-        X, y, nb_classes = load_data(dataset_path)
+        #X, y, nb_classes = load_data(dataset_path)
+
+        test_generator = get_batches(dataset_path, shuffle=False, batch_size=BATCH_SIZE)
+        x_train = test_generator.classes
+        y_train = to_categorical(x_train)
+        nb_classes = len(y_train[0])
         model = get_model(nb_classes)
-	print "Training.."
-        print y
+        
         checkpoint_path="weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
-        model.fit(X, y, nb_epoch=40, batch_size=24, validation_split=0.2, verbose=1, callbacks=[checkpoint])
+        model.fit_generator(test_generator, 64, BATCH_SIZE, callbacks=[checkpoint])
+        # datagen = ImageDataGenerator(
+            # featurewise_center=True,
+            # featurewise_std_normalization=True,
+            # rotation_range=20,
+            # width_shift_range=0.2,
+            # height_shift_range=0.2,
+            # horizontal_flip=True)
+
+        # compute quantities required for featurewise normalization
+        # (std, mean, and principal components if ZCA whitening is applied)
+        # datagen.fit(x_train)
+
+        # fits the model on batches with real-time data augmentation:
+        # model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
+                            # steps_per_epoch=len(x_train) / 32, epochs=epochs)
+        # trn_features = model.predict_generator(batches, batches.nb_sample)
+        # save_array(model_path + 'train_convlayer_features.bc', trn_features)
+        # print y
+        # model.fit(batches, trn_labels, nb_epoch=40, batch_size=BATCH_SIZE, validation_split=0.2, verbose=1, callbacks=[checkpoint])
 
 def visualize_class_activation_map(model_path, img_path, output_path):
         model = load_model(model_path)
