@@ -9,52 +9,29 @@ import cv2
 import argparse
 from keras.utils.np_utils import to_categorical
 BATCH_SIZE = 32
-
-nb_train_samples = 2000
-nb_validation_samples = 800
+NB_EPOCHS = 5
+SAMPLES_PER_EPOCH = 500
 
 def train(dataset_path):
-        #X, y, nb_classes = load_data(dataset_path)
-
         train_generator = get_batches(dataset_path+"/train", shuffle=False, batch_size=BATCH_SIZE)
-        valid_generator = get_batches(dataset_path+"/train", shuffle=False, batch_size=BATCH_SIZE)
+        valid_generator = get_batches(dataset_path+"/valid", shuffle=False, batch_size=BATCH_SIZE)
         x_train = train_generator.classes
+        x_valid = valid_generator.classes
         y_train = to_categorical(x_train)
         nb_classes = len(y_train[0])
         model = get_model(nb_classes)
-        nb_train_samples = train_generator.nb_samples
-        nb_validation_samples = validation_generator.nb_samples
+        nb_train_samples = len(x_train)
+        nb_valid_samples = len(x_valid)
         print(nb_train_samples)
-        print(nb_validation_samples)
-        
-        checkpoint_path="weights.{epoch:02d}-{val_loss:.2f}.hdf5"
+        checkpoint_path="weights/weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
         model.fit_generator(
                 train_generator, 
-                steps_per_epoch= nb_train_samples // BATCH_SIZE,
-                BATCH_SIZE, 
-                validation_data=validation_generator,
-                validation_steps=nb_validation_samples // BATCH_SIZE,
+                SAMPLES_PER_EPOCH,
+                NB_EPOCHS,
+                validation_data=valid_generator,
+                nb_val_samples=int(SAMPLES_PER_EPOCH*0.2),
                 callbacks=[checkpoint])
-        # datagen = ImageDataGenerator(
-            # featurewise_center=True,
-            # featurewise_std_normalization=True,
-            # rotation_range=20,
-            # width_shift_range=0.2,
-            # height_shift_range=0.2,
-            # horizontal_flip=True)
-
-        # compute quantities required for featurewise normalization
-        # (std, mean, and principal components if ZCA whitening is applied)
-        # datagen.fit(x_train)
-
-        # fits the model on batches with real-time data augmentation:
-        # model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                            # steps_per_epoch=len(x_train) / 32, epochs=epochs)
-        # trn_features = model.predict_generator(batches, batches.nb_sample)
-        # save_array(model_path + 'train_convlayer_features.bc', trn_features)
-        # print y
-        # model.fit(batches, trn_labels, nb_epoch=40, batch_size=BATCH_SIZE, validation_split=0.2, verbose=1, callbacks=[checkpoint])
 
 def visualize_class_activation_map(model_path, img_path, output_path):
         model = load_model(model_path)
