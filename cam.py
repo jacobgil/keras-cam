@@ -9,8 +9,7 @@ import cv2
 import argparse
 from keras.utils.np_utils import to_categorical
 BATCH_SIZE = 32
-NB_EPOCHS = 5
-SAMPLES_PER_EPOCH = 500
+NB_EPOCHS = 50
 
 def train(dataset_path):
         train_generator = get_batches(dataset_path+"/train", shuffle=False, batch_size=BATCH_SIZE)
@@ -27,10 +26,10 @@ def train(dataset_path):
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
         model.fit_generator(
                 train_generator, 
-                SAMPLES_PER_EPOCH,
+                nb_train_samples,
                 NB_EPOCHS,
                 validation_data=valid_generator,
-                nb_val_samples=int(SAMPLES_PER_EPOCH*0.2),
+                nb_val_samples=nb_valid_samples,
                 callbacks=[checkpoint])
 
 def visualize_class_activation_map(model_path, img_path, output_path):
