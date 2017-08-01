@@ -10,18 +10,32 @@ import argparse
 from keras.utils.np_utils import to_categorical
 BATCH_SIZE = 32
 
+nb_train_samples = 2000
+nb_validation_samples = 800
+
 def train(dataset_path):
         #X, y, nb_classes = load_data(dataset_path)
 
-        test_generator = get_batches(dataset_path, shuffle=False, batch_size=BATCH_SIZE)
-        x_train = test_generator.classes
+        train_generator = get_batches(dataset_path+"/train", shuffle=False, batch_size=BATCH_SIZE)
+        valid_generator = get_batches(dataset_path+"/train", shuffle=False, batch_size=BATCH_SIZE)
+        x_train = train_generator.classes
         y_train = to_categorical(x_train)
         nb_classes = len(y_train[0])
         model = get_model(nb_classes)
+        nb_train_samples = train_generator.nb_samples
+        nb_validation_samples = validation_generator.nb_samples
+        print(nb_train_samples)
+        print(nb_validation_samples)
         
         checkpoint_path="weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
-        model.fit_generator(test_generator, 64, BATCH_SIZE, callbacks=[checkpoint])
+        model.fit_generator(
+                train_generator, 
+                steps_per_epoch= nb_train_samples // BATCH_SIZE,
+                BATCH_SIZE, 
+                validation_data=validation_generator,
+                validation_steps=nb_validation_samples // BATCH_SIZE,
+                callbacks=[checkpoint])
         # datagen = ImageDataGenerator(
             # featurewise_center=True,
             # featurewise_std_normalization=True,
