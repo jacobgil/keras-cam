@@ -7,12 +7,13 @@ import cv2
 import argparse
 
 def train(dataset_path):
-        model = get_model()
-        X, y = load_inria_person(dataset_path)
+        X, y, nb_classes = load_data(dataset_path)
+        model = get_model(nb_classes)
 	print "Training.."
+        print y
         checkpoint_path="weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
-        model.fit(X, y, nb_epoch=40, batch_size=32, validation_split=0.2, verbose=1, callbacks=[checkpoint])
+        model.fit(X, y, nb_epoch=40, batch_size=24, validation_split=0.2, verbose=1, callbacks=[checkpoint])
 
 def visualize_class_activation_map(model_path, img_path, output_path):
         model = load_model(model_path)
