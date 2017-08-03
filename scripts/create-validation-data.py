@@ -1,7 +1,7 @@
 import os
 
-TRAIN_DIR = "./data/train"
-VALID_DIR = "./data/valid"
+TRAIN_DIR = "../data/train"
+VALID_DIR = "../data/valid"
 
 
 classes = os.listdir(TRAIN_DIR)

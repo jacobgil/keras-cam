@@ -52,13 +52,17 @@ def VGG16_convolutions():
 def get_model(nb_classes):
     model = VGG16_convolutions()
 
-    # model = load_model_weights(model, "vgg16.h5")
+    model = load_model_weights(model, "vgg16_weights.h5")
     
+    print("NUMBER OF CLASSES", nb_classes)
     model.add(Lambda(global_average_pooling, 
               output_shape=global_average_pooling_shape))
     model.add(Dense(nb_classes, activation = 'softmax', init='uniform'))
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.5, nesterov=True)
     model.compile(loss = 'categorical_crossentropy', optimizer = sgd, metrics=['accuracy'])
+    # model.compile(loss='binary_crossentropy',
+          # optimizer='rmsprop',
+          # metrics=['accuracy'])
     return model
 
 def load_model_weights(model, weights_path):

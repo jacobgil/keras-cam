@@ -19,16 +19,18 @@ from keras.preprocessing import image
 
 def get_batches(
         dirname, 
-        gen=image.ImageDataGenerator(
-            rescale=1./255,
-            shear_range=0.2,
-            zoom_range=0.2,
-            horizontal_flip=True), 
-        shuffle=True, 
+        gen=image.ImageDataGenerator(), 
+        shuffle=False, 
+        save_to_dir=None,
         batch_size=32, 
         class_mode='categorical',
         target_size=(224,224)):
-    return gen.flow_from_directory(dirname, target_size=target_size,
-            class_mode=class_mode, shuffle=shuffle, batch_size=batch_size)
+    return gen.flow_from_directory(
+            dirname, 
+            save_to_dir=save_to_dir,
+            target_size=target_size,
+            class_mode=class_mode, 
+            shuffle=shuffle, 
+            batch_size=batch_size)
 
 

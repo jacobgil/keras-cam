@@ -12,8 +12,16 @@ BATCH_SIZE = 32
 NB_EPOCHS = 50
 
 def train(dataset_path):
-        train_generator = get_batches(dataset_path+"/train", shuffle=False, batch_size=BATCH_SIZE)
+        gen = ImageDataGenerator(
+            rotation_range=15,
+            rescale=1./255,
+            shear_range=0.1,
+            zoom_range=0.1,
+            horizontal_flip=True)
+        train_generator = get_batches(dataset_path+"/train", gen=gen, shuffle=True, batch_size=BATCH_SIZE)
+        # Don't shuffle or Augment validation set
         valid_generator = get_batches(dataset_path+"/valid", shuffle=False, batch_size=BATCH_SIZE)
+
         x_train = train_generator.classes
         x_valid = valid_generator.classes
         y_train = to_categorical(x_train)
@@ -21,7 +29,6 @@ def train(dataset_path):
         model = get_model(nb_classes)
         nb_train_samples = len(x_train)
         nb_valid_samples = len(x_valid)
-        print(nb_train_samples)
         checkpoint_path="weights/weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto')
         model.fit_generator(
@@ -47,11 +54,12 @@ def visualize_class_activation_map(model_path, img_path, output_path):
         [conv_outputs, predictions] = get_output([img])
         conv_outputs = conv_outputs[0, :, :, :]
 
+        print "predictions", predictions
+        target_class = 0
         #Create the class activation map.
         cam = np.zeros(dtype = np.float32, shape = conv_outputs.shape[1:3])
-        for i, w in enumerate(class_weights[:, 1]):
+        for i, w in enumerate(class_weights[:, target_class]):
                 cam += w * conv_outputs[i, :, :]
-        print "predictions", predictions
         cam /= np.max(cam)
         cam = cv2.resize(cam, (height, width))
         heatmap = cv2.applyColorMap(np.uint8(255*cam), cv2.COLORMAP_JET)
