@@ -1,0 +1,4 @@
+weights/*
+*.pyc
+data
+weights_1

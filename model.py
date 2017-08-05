@@ -49,14 +49,14 @@ def VGG16_convolutions():
     model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_3'))
     return model
 
-def get_model():
+def get_model(nb_classes):
     model = VGG16_convolutions()
 
     model = load_model_weights(model, "vgg16_weights.h5")
     
     model.add(Lambda(global_average_pooling, 
               output_shape=global_average_pooling_shape))
-    model.add(Dense(2, activation = 'softmax', init='uniform'))
+    model.add(Dense(nb_classes, activation = 'softmax', init='uniform'))
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.5, nesterov=True)
     model.compile(loss = 'categorical_crossentropy', optimizer = sgd, metrics=['accuracy'])
     return model
