@@ -72,7 +72,10 @@ def visualize_class_activation_map(model_path, img_path, output_path):
 
         #Create the class activation map.
         cam = np.zeros(dtype = np.float32, shape = conv_outputs.shape[1:3])
-        for i, w in enumerate(class_weights[:, 1]):
+
+        class_index = predictions.argmax()
+        print(class_index)
+        for i, w in enumerate(class_weights[:, class_index]):
                 cam += w * conv_outputs[i, :, :]
         print "predictions", predictions
         cam /= np.max(cam)
