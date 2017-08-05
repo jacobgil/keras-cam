@@ -9,6 +9,7 @@ import cv2
 import argparse
 BATCH_SIZE = 32
 NB_EPOCHS = 40
+IMAGE_SIZE = (128, 128)
 
 def get_batches(
         dirname, 
@@ -17,7 +18,7 @@ def get_batches(
         save_to_dir=None,
         batch_size=32, 
         class_mode='categorical',
-        target_size=(128,128)):
+        target_size=IMAGE_SIZE):
     return gen.flow_from_directory(
             dirname, 
             save_to_dir=save_to_dir,
@@ -57,7 +58,7 @@ def train(dataset_path):
 
 def visualize_class_activation_map(model_path, img_path, output_path):
         model = load_model(model_path)
-        original_img = cv2.resize(cv2.imread(img_path, 1), (224, 224)) 
+        original_img = cv2.resize(cv2.imread(img_path, 1), IMAGE_SIZE) 
         width, height, _ = original_img.shape
 
         #Reshape to the network input shape (3, w, h).
